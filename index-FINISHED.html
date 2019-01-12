@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>JS Drum Kit</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+// all the div classes with their "data-key" custome attributes
+// the custom attribute is their key stroke number
+// so the divs css can be transformed later to style it on events
+  <div class="keys">
+    <div data-key="65" class="key">
+      <kbd>A</kbd>
+      <span class="sound">clap</span>
+    </div>
+    <div data-key="83" class="key">
+      <kbd>S</kbd>
+      <span class="sound">hihat</span>
+    </div>
+    <div data-key="68" class="key">
+      <kbd>D</kbd>
+      <span class="sound">kick</span>
+    </div>
+    <div data-key="70" class="key">
+      <kbd>F</kbd>
+      <span class="sound">openhat</span>
+    </div>
+    <div data-key="71" class="key">
+      <kbd>G</kbd>
+      <span class="sound">boom</span>
+    </div>
+    <div data-key="72" class="key">
+      <kbd>H</kbd>
+      <span class="sound">ride</span>
+    </div>
+    <div data-key="74" class="key">
+      <kbd>J</kbd>
+      <span class="sound">snare</span>
+    </div>
+    <div data-key="75" class="key">
+      <kbd>K</kbd>
+      <span class="sound">tom</span>
+    </div>
+    <div data-key="76" class="key">
+      <kbd>L</kbd>
+      <span class="sound">tink</span>
+    </div>
+  </div>
+
+  // here the data-key attributes are set to the same keystroke numbers
+  // as the divs above to link them to their sound in the src below
+  <audio data-key="65" src="sounds/clap.wav"></audio>
+  <audio data-key="83" src="sounds/hihat.wav"></audio>
+  <audio data-key="68" src="sounds/kick.wav"></audio>
+  <audio data-key="70" src="sounds/openhat.wav"></audio>
+  <audio data-key="71" src="sounds/boom.wav"></audio>
+  <audio data-key="72" src="sounds/ride.wav"></audio>
+  <audio data-key="74" src="sounds/snare.wav"></audio>
+  <audio data-key="75" src="sounds/tom.wav"></audio>
+  <audio data-key="76" src="sounds/tink.wav"></audio>
+
+
+<script>
+
+// this function will "reset" the css for the div back to its starting state
+// this adds a responsive feel
+// usung the event (aka (e)) this functin is run if the propertyName is not "transform"
+// it then returns and last removes the classname "playing" completing the reset
+  function removeTransition(e) {
+    if (e.propertyName !== 'transform') return;
+    e.target.classList.remove('playing');
+  }
+
+// this function plays the sound from the audio element in the html above
+// on the event (e) audio const is set to read the document for the audio element that is affected on the keystrike
+// then do the same for the div that is is in and if nothing returns from the audio element in the hmtl
+// else it adds a  class of playing to the classList to change the CSS when keystrike happen
+// it also resets the currentTime of the audio so you can play it again right away
+// last just plays the audio element
+  function playSound(e) {
+    const audio = document.querySelector(`audio[data-key="${e.keyCode}"]`);
+    const key = document.querySelector(`div[data-key="${e.keyCode}"]`);
+    if (!audio) return;
+
+    key.classList.add('playing');
+    audio.currentTime = 0;
+    audio.play();
+  }
+
+// here const "keys" is set to add the class of ".key" on key strike to change style in css
+  const keys = Array.from(document.querySelectorAll('.key'));
+
+// then uses the this listens on the key for the property "transitioned" CSS property
+// and removes it via removeTransition to "reset" the CSS to the default
+  keys.forEach(key => key.addEventListener('transitionend', removeTransition));
+
+// and on keydown property the sound is played
+  window.addEventListener('keydown', playSound);
+</script>
+
+
+</body>
+</html>
